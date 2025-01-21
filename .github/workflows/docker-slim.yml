@@ -22,10 +22,14 @@ jobs:
       - name: Build and push the image
         run: |
           docker build -t mkdocs-image -f Dockerfile.mkdocs .
-          docker tag mkdocs-image ghcr.io/${GITHUB_REPOSITORY}/mkdocs-image:latest
-          docker push ghcr.io/${GITHUB_REPOSITORY}/mkdocs-image:latest
+          docker tag mkdocs-image ghcr.io/${{ github.repository }}/mkdocs-image:latest
+          docker push ghcr.io/${{ github.repository }}/mkdocs-image:latest
 
           docker run -d --rm --tty=false -v /var/run/docker.sock:/var/run/docker.sock dslim/slim build mkdocs-image
           SLIM_IMAGE_ID=$(docker images -q --filter "reference=mkdocs-image-slim")
-          docker tag $SLIM_IMAGE_ID ghcr.io/${GITHUB_REPOSITORY}/slim-image:latest
-          docker push ghcr.io/${GITHUB_REPOSITORY}/slim-image:latest
+          if [ -z "$SLIM_IMAGE_ID" ]; then
+            echo "SLIM_IMAGE_ID is empty"
+            exit 1
+          fi
+          docker tag $SLIM_IMAGE_ID ghcr.io/${{ github.repository }}/slim-image:latest
+          docker push ghcr.io/${{ github.repository }}/slim-image:latest
