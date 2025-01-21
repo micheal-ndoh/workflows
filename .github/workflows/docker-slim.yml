@@ -25,6 +25,6 @@ jobs:
           docker tag mkdocs-image ghcr.io/${GITHUB_REPOSITORY}/mkdocs-image:latest
           docker push ghcr.io/${GITHUB_REPOSITORY}/mkdocs-image:latest
 
-          docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock dslim/slim build mkdocs-image
+          docker run -d --rm --tty=false -v /var/run/docker.sock:/var/run/docker.sock dslim/slim build mkdocs-image
           docker tag $(docker images -q --filter "reference=mkdocs-image-slim") ghcr.io/${GITHUB_REPOSITORY}/slim-image:latest
           docker push ghcr.io/${GITHUB_REPOSITORY}/slim-image:latest
