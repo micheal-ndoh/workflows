@@ -1,4 +1,3 @@
-# docker-slim.yml
 name: Docker Slim
 
 on:
@@ -13,6 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install docker-slim
+        run: |
+          curl -sL https://github.com/docker-slim/docker-slim/releases/download/v1.34.0/docker-slim-1.34.0-linux-amd64.tar.gz | tar -xz
+          sudo mv docker-slim-1.34.0-linux-amd64/docker-slim /usr/local/bin/
+          sudo chmod +x /usr/local/bin/docker-slim
+
       - name: Login to GHCR
         uses: docker/login-action@v1
         with:
@@ -26,6 +31,5 @@ jobs:
           docker tag mkdocs-image ghcr.io/${GITHUB_REPOSITORY}/mkdocs-image:latest
           docker push ghcr.io/${GITHUB_REPOSITORY}/mkdocs-image:latest
 
-          docker build -t slim-image -f Dockerfile.slim .
-          docker tag slim-image ghcr.io/${GITHUB_REPOSITORY}/slim-image:latest
+          docker-slim build --tag ghcr.io/${GITHUB_REPOSITORY}/slim-image:latest mkdocs-image
           docker push ghcr.io/${GITHUB_REPOSITORY}/slim-image:latest
