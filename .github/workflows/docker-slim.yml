@@ -27,9 +27,6 @@ jobs:
 
           docker run -d --rm --tty=false -v /var/run/docker.sock:/var/run/docker.sock dslim/slim build mkdocs-image
           SLIM_IMAGE_ID=$(docker images -q --filter "reference=mkdocs-image-slim")
-          if [ -z "$SLIM_IMAGE_ID" ]; then
-            echo "SLIM_IMAGE_ID is empty"
-            exit 1
-          fi
+    
           docker tag $SLIM_IMAGE_ID ghcr.io/${{ github.repository }}/slim-image:latest
           docker push ghcr.io/${{ github.repository }}/slim-image:latest
