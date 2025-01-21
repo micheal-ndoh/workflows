@@ -1,0 +1,30 @@
+name: Docker Slim
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push the image
+        run: |
+          docker build -t mkdocs-image -f Dockerfile.mkdocs .
+          docker tag mkdocs-image ghcr.io/${GITHUB_REPOSITORY}/mkdocs-image:latest
+          docker push ghcr.io/${GITHUB_REPOSITORY}/mkdocs-image:latest
+
+          docker build -t slim-image -f Dockerfile.slim .
+          docker tag slim-image ghcr.io/${GITHUB_REPOSITORY}/slim-image:latest
+          docker push ghcr.io/${GITHUB_REPOSITORY}/slim-image:latest

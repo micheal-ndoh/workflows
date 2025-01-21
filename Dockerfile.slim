@@ -1,0 +1,13 @@
+FROM docker-slim/docker-slim:1.34.0
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the Dockerfile for the mkdocs image
+COPY Dockerfile.mkdocs .
+
+# Build the mkdocs image
+RUN docker build -t mkdocs-image -f Dockerfile.mkdocs .
+
+# Run Docker Slim to compress the image
+RUN docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock dslim/slim build mkdocs-image
