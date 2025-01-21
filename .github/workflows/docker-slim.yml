@@ -21,7 +21,7 @@ jobs:
 
       - name: Build and push the image
         run: |
-          docker build -t mkdocs-image -f Dockerfile.mkdocs -t mkdocs-image
+          docker build -t mkdocs-image -f Dockerfile.mkdocs .
           docker tag mkdocs-image ghcr.io/${GITHUB_REPOSITORY}/mkdocs-image:latest
           docker push ghcr.io/${GITHUB_REPOSITORY}/mkdocs-image:latest
 
